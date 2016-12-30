@@ -17,7 +17,7 @@ class AutoConnect(object):
 		self.uname = username
 		self.pwd = password
 		self.snz_time = snooze
-		# TODO: get default web browser since Chrome may not installed
+		# TODO: get default web browser since Chrome may not be installed
 		self.browser = webdriver.Chrome()
 		self.test_host = "www.yahoo.com"
 		self._last_connected = None
@@ -25,14 +25,14 @@ class AutoConnect(object):
 
 	@property
 	def is_connected(self):
-	    """
-	    Returns True if host responds to a ping request
-	    """
-	    win_os_flag = platform.system().lower() == "windows"
-	    switch = ("-c", "-n")[win_os_flag]
-	    cmd = ["ping", switch, "1", self.test_host]
-	    status = subprocess.call(cmd) == 0
-	    return status
+		"""
+		Returns True if host responds to a ping request
+		"""
+		win_os_flag = platform.system().lower() == "windows"
+		switch = ("-c", "-n")[win_os_flag]
+		cmd = ["ping", switch, "1", self.test_host]
+		status = subprocess.call(cmd) == 0
+		return status
 
 
 	def keep_connection_alive(self):
