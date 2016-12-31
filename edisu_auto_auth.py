@@ -7,46 +7,52 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
+def _get_browser(platform):
+	if platform == "windows":
+		pass # use IE or edge as browser
+
+	return webdriver.Chrome()
+
+
 class AutoConnect(object):
-	'''
-	'''
+	""" 	"""
 
 	def __init__(self, username='', password='', snooze=7, expiry=3600*5):
-		'''
-		'''
+		"""
+		"""
 		self.uname = username
 		self.pwd = password
 		self.snz_time = snooze
 		# TODO: get default web browser since Chrome may not be installed
-		self.browser = webdriver.Chrome()
+		self.browser = _get_browser(self.platform)
 		self.test_host = "www.yahoo.com"
 		self._last_connected = None
 		
-
 	@property
 	def is_connected(self):
 		"""
 		Returns True if host responds to a ping request
 		"""
-		win_os_flag = platform.system().lower() == "windows"
+		win_os_flag = self.platform == "windows"
 		switch = ("-c", "-n")[win_os_flag]
 		cmd = ["ping", switch, "1", self.test_host]
-		status = subprocess.call(cmd) == 0
-		return status
+		return subprocess.call(cmd) == 0
 
+	@property
+	def platform(self):
+		return platform.system().lower()
 
 	def keep_connection_alive(self):
-		'''
-		'''
+		"""
+		"""
 		if self.is_connected(self.test_host):
 			time.sleep(self.snz_time)
 		else:
 			self.login(self.uname, self.pwd)
 
-
 	def login(self):
-		'''
-		'''
+		"""
+		"""
 		self.browser.get("http://{}".format(self.test_host))
 		
 		username = self.browser.find_element_by_name("U")
