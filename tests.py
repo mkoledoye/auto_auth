@@ -5,7 +5,7 @@ import unittest
 from edisu_auto_auth import AutoConnect
 
 class UserAlreadyConnected(Exception):
-	'''Raise when the client is already connected to the internet'''
+	"""Raise when the client is already connected to the internet"""
 
 	def __init__(self):
 		self.message = 'The user is alredy logged in. Please disconnect using the connection window and try again'
@@ -13,7 +13,7 @@ class UserAlreadyConnected(Exception):
 
 
 class TestLogin(unittest.TestCase):
-	'''Test that client can be logged in automatically'''
+	"""Test that client can be logged in automatically"""
 
 	def setUp(self):
 		self.retries = 0
@@ -30,9 +30,5 @@ class TestLogin(unittest.TestCase):
 
 
 if __name__ == '__main__':
-
-	try:
-		unittest.main()
-	except UserAlreadyConnected:
-		print('The user is alredy logged in. Please disconnect using the connection window and try again')
+	unittest.main()
 
