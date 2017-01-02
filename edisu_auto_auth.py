@@ -22,7 +22,7 @@ class AutoConnect(object):
 		"""
 		self.uname = username
 		self.pwd = password
-		self.snz_time = snooze
+		self.snooze_time = snooze
 		# TODO: get default web browser since Chrome may not be installed
 		self.browser = _get_browser(self.platform)
 		self.test_host = "www.yahoo.com"
@@ -45,10 +45,12 @@ class AutoConnect(object):
 	def keep_connection_alive(self):
 		"""
 		"""
-		if self.is_connected(self.test_host):
-			time.sleep(self.snz_time)
-		else:
-			self.login(self.uname, self.pwd)
+		if not self.is_connected(self.test_host):
+			success = self.login(self.uname, self.pwd)
+			if success:
+				self.deep_sleep()
+		# sleep for ten  seconds before trying again
+		time.sleep(10)
 
 	def login(self):
 		"""
@@ -63,19 +65,22 @@ class AutoConnect(object):
 		form = self.browser.find_element_by_name("data")
 		form.submit()
 		time.sleep(7)
-
+		# check if login succeeded
 		if self.is_connected:
 			self._last_connected = datetime.now()
-			self.deep_sleep()
+			return True
+		return False
+			
 
 	def deep_sleep(self):
-		pass
+		print('Going to sleep...')
+		time.sleep(60*55)
 
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-u", "--username", required=True, help = "username for authentication")
-	#this password can be entered in plain text since its issued by network admins, isn't modifiable and does not permit simultaneous login
+	#this password can be entered in plain text since it poses no security risk
 	parser.add_argument("-p", "--password", required=True, help = "password for authentication")
 	args = parser.parse_args()
 	connection = AutoConnect(**vars(args))
